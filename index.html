@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dynamic Vim Cheatsheet</title>
+    <!-- Point to your raw source CSS. Vite compiles this on the fly! -->
+    <link rel="stylesheet" href="./src/input.css" />
+    <!-- Vite processes custom module dependencies explicitly -->
+    <script type="module" src="./src/commands.js" defer></script>
+  </head>
+  <body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased">
+
+    <!-- Alpine App Instance Root Scope Component Wrapper -->
+    <div x-data="cheatsheet" class="p-6 max-w-4xl mx-auto">
+      
+      <!-- Top Layout Presentation Header Group -->
+      <header class="mb-8 text-center">
+        <h1 class="text-4xl font-extrabold text-white tracking-tight">Vim Cheatsheet</h1>
+        <p class="text-slate-400 mt-2 text-sm">Press <kbd class="bg-slate-900 border border-slate-800 px-1.5 py-0.5 rounded text-slate-300 font-mono text-xs shadow">/</kbd> to focus search, and <kbd class="bg-slate-900 border border-slate-800 px-1.5 py-0.5 rounded text-slate-300 font-mono text-xs shadow">Esc</kbd> to clear.</p>
+        
+        <!-- Search Bar Input Box Component -->
+        <div class="mt-6 max-w-md mx-auto">
+          <form @submit.prevent class="relative text-slate-400">
+            <input 
+              x-ref="searchInput"
+              type="search" 
+              name="search" 
+              x-model="search"
+              placeholder="Search shortcuts, actions..." 
+              class="bg-slate-900 h-10 w-full px-5 pr-12 rounded-full text-sm text-slate-100 border border-slate-800 shadow-inner focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 placeholder-slate-500 transition-all duration-200"
+            >
+            
+            <!-- Dynamic Reset Control X Element -->
+            <button 
+              type="button" 
+              x-show="search.length > 0" 
+              @click="search = ''; \$refs.searchInput.focus()" 
+              class="absolute right-12 top-0 mt-2.5 text-slate-500 hover:text-slate-300 text-sm font-semibold transition p-0.5"
+              style="display: none;"
+            >
+              ✕
+            </button>
+            
+            <button type="submit" class="absolute right-0 top-0 mt-3 mr-4">
+              <svg class="h-4 w-4 fill-current text-slate-500" xmlns="http://w3.org" viewBox="0 0 56.966 56.966">
+                <path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23 s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92 c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17 s-17-7.626-17-17S14.61,6,23.984,6z"/>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </header>
+
+      <!-- Main Visual Grid Table Container Dashboard -->
+      <main class="bg-slate-900 rounded-xl shadow-xl border border-slate-800 overflow-hidden">
+        
+        <!-- Table Column Header Row Labels Layout -->
+        <div class="grid grid-cols-3 gap-4 bg-slate-950/60 px-6 py-3 text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 select-none">
+          <div>Shortcut Key</div>
+          <div>Action / Meaning</div>
+          <div class="text-right">Category</div>
+        </div>
+
+        <!-- Dynamic List Row Repeater Loop -->
+        <div class="divide-y divide-slate-800/60">
+          <template x-for="item in filteredCommands" :key="item.key">
+            <div class="grid grid-cols-3 gap-4 px-6 py-3.5 items-center text-sm hover:bg-slate-950/30 transition duration-150 ease-in-out">
+              
+              <!-- Shortcut Column Element -->
+              <div>
+                <kbd class="font-mono bg-slate-950 text-amber-400 px-2 py-1 rounded border border-slate-800 shadow-md font-semibold text-xs tracking-wide min-w-[28px] inline-block text-center" x-text="item.key"></kbd>
+              </div>
+              
+              <!-- Description Logic String Output Target -->
+              <div class="text-slate-300 font-medium" x-text="item.action"></div>
+              
+              <!-- Category Classification Structural Badge Tag Element Box -->
+              <div class="text-right">
+                <span 
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border border-slate-800"
+                  :class="{
+                    'bg-blue-500/10 text-blue-400': item.category === 'Navigation',
+                    'bg-emerald-500/10 text-emerald-400': item.category === 'Editing',
+                    'bg-purple-500/10 text-purple-400': item.category === 'File System'
+                  }"
+                  x-text="item.category"
+                ></span>
+              </div>
+
+            </div>
+          </template>
+        </div>
+
+        <!-- Fallback Empty Match Array Interface Notification Notification UI Component -->
+        <div x-show="filteredCommands.length === 0" class="p-12 text-center text-slate-500 text-sm" style="display: none;">
+          No matching commands found for <span class="font-semibold text-slate-400" x-text="`&ldquo;${search}&rdquo;`"></span>.
+        </div>
+
+      </main>
+    </div>
+
+  </body>
+</html>
